@@ -45,31 +45,6 @@ app.post("/verify", (req, res) => {
   );
 });
 
-app.post("/sign", (req, res) => {
-  const { privateKey } = req.body;
-
-  const bytesArrayMsg = utf8ToBytes("something random");
-  const messageHash = keccak256(bytesArrayMsg);
-
-  const sign = async (msg) => {
-    const msgHash = keccak256(msg);
-    const array = await secp.sign(msgHash, privateKey, {
-      recovered: true,
-      extraEntropy: true,
-    });
-    return [msgHash, array[0], array[1]];
-  };
-
-  sign(messageHash).then((array) => {
-    usedSignatures.push(toHex(array[1]));
-    res.send({
-      msgHash: toHex(array[0]),
-      signature: toHex(array[1]),
-      recoveryBit: array[2],
-    });
-  });
-});
-
 app.post("/send", (req, res) => {
   // Check is signature is already used
   const { sender, recipient, amount } = req.body;
