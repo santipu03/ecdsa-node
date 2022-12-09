@@ -23,31 +23,33 @@ app.get("/balance/:address", (req, res) => {
   res.send({ balance });
 });
 
-app.post("/verify", (req, res) => {
-  const { msgHash, signature, recoveryBit } = req.body;
-  const recoverPublicKey = async (msgHash, signature, recoveryBit) => {
-    const recoveredPublicKey = await secp.recoverPublicKey(
-      msgHash,
-      signature,
-      recoveryBit
-    );
-    return recoveredPublicKey;
-  };
-
-  recoverPublicKey(msgHash, signature, parseInt(recoveryBit)).then(
-    (recoveredPublicKey) => {
-      const hashedPublicKey = keccak256(recoveredPublicKey);
-      const address = hashedPublicKey.slice(1).slice(-20);
-      res.send({
-        recoveredAddress: `0x${toHex(address)}`,
-      });
-    }
-  );
-});
+// app.post("/verify", (req, res) => {
+//   const { msgHash, signature, recoveryBit } = req.body;
+//   const recoverPublicKey = async (msgHash, signature, recoveryBit) => {
+//     const recoveredPublicKey = await secp.recoverPublicKey(
+//       msgHash,
+//       signature,
+//       recoveryBit
+//     );
+//     return recoveredPublicKey;
+//   };
+//
+//   recoverPublicKey(msgHash, signature, parseInt(recoveryBit)).then(
+//     (recoveredPublicKey) => {
+//       const hashedPublicKey = keccak256(recoveredPublicKey);
+//       const address = hashedPublicKey.slice(1).slice(-20);
+//       res.send({
+//         recoveredAddress: `0x${toHex(address)}`,
+//       });
+//     }
+//   );
+// });
 
 app.post("/send", (req, res) => {
   // Check is signature is already used
-  const { sender, recipient, amount } = req.body;
+  const { amount, recipient, msgHash, signature, recoveryBit } = req.body;
+
+  const recoveredPublicKey = recoverPublicKey(msgHash, signature, recoveryBit);
 
   setInitialBalance(sender);
   setInitialBalance(recipient);
@@ -69,4 +71,13 @@ function setInitialBalance(address) {
   if (!balances[address]) {
     balances[address] = 0;
   }
+}
+
+async function recoverPublicKey(msgHash, signature, recoveryBit) {
+  const recoveredPublicKey = await secp.recoverPublicKey(
+    msgHash,
+    signature,
+    recoveryBit
+  );
+  return recoveredPublicKey;
 }
