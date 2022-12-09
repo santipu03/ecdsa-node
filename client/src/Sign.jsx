@@ -1,5 +1,7 @@
 import { useState } from "react";
-import server from "./server";
+import * as secp from "ethereum-cryptography/secp256k1";
+import { keccak256 } from "ethereum-cryptography/keccak";
+import { toHex, utf8ToBytes } from "ethereum-cryptography/utils";
 
 function Sign() {
   const [privateKey, setPrivateKey] = useState("");
@@ -11,19 +13,16 @@ function Sign() {
 
   const sign = async (e) => {
     e.preventDefault();
-    try {
-      const {
-        data: { msgHash, signature, recoveryBit },
-      } = await server.post(`sign`, {
-        privateKey,
-      });
-      setMsgHash(msgHash);
-      setSignature(signature);
-      setRecoveryBit(recoveryBit);
-      setPrivateKey("");
-    } catch (err) {
-      console.log(err);
-    }
+
+    const messageBytes = utf8ToBytes("something random");
+    const messageHash = keccak256(messageBytes);
+    const array = await secp.sign(messageHash, privateKey, {
+      recovered: true,
+      extraEntropy: true,
+    });
+    setMsgHash(toHex(messageHash));
+    setSignature(toHex(array[0]));
+    setRecoveryBit(array[1]);
   };
 
   return (
