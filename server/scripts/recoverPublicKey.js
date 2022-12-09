@@ -2,7 +2,7 @@ const secp = require("ethereum-cryptography/secp256k1");
 const { keccak256 } = require("ethereum-cryptography/keccak");
 const { toHex, utf8ToBytes } = require("ethereum-cryptography/utils");
 
-// Paste here the values to recover
+// Paste here the values to recover the Public Key
 const msgHash =
   "8e5ba2564bac5c7de3890bd885a03a1777c50476f325c11a7dbd4e817bb13c02";
 const signature =

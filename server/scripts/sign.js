@@ -3,13 +3,16 @@ const { keccak256 } = require("ethereum-cryptography/keccak");
 const { toHex, utf8ToBytes } = require("ethereum-cryptography/utils");
 
 const privateKey =
-  "1c7f9a779b571fa7453d6f399904fb1c6689529e5f840d2350655b8563d36f29";
+  "23cb3031041e44c4afe62222c91f5350022ae1bdfa6309ab9d04d2ed8ce295bb";
 const bytesArrayMsg = utf8ToBytes("Hello");
 const messageHash = keccak256(bytesArrayMsg);
 
 const sign = async (msg) => {
   const msgHash = keccak256(msg);
-  const array = await secp.sign(msgHash, privateKey, { recovered: true });
+  const array = await secp.sign(msgHash, privateKey, {
+    recovered: true,
+    extraEntropy: true,
+  });
   return [msgHash, array[0], array[1]];
 };
 
