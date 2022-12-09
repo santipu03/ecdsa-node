@@ -15,6 +15,8 @@ const balances = {
   "0x82850e255b1b6dc6ca2014da9731b5cdbf3b40b3": 75,
 };
 
+const usedSignatures = [];
+
 app.get("/balance/:address", (req, res) => {
   const { address } = req.params;
   const balance = balances[address] || 0;
@@ -34,14 +36,42 @@ app.post("/verify", (req, res) => {
 
   recoverPublicKey(msgHash, signature, parseInt(recoveryBit)).then(
     (recoveredPublicKey) => {
+      const hashedPublicKey = keccak256(recoveredPublicKey);
+      const address = hashedPublicKey.slice(1).slice(-20);
       res.send({
-        recoveredPublicKey: toHex(recoveredPublicKey),
+        recoveredAddress: `0x${toHex(address)}`,
       });
     }
   );
 });
 
+app.post("/sign", (req, res) => {
+  const { privateKey } = req.body;
+
+  const bytesArrayMsg = utf8ToBytes("something random");
+  const messageHash = keccak256(bytesArrayMsg);
+
+  const sign = async (msg) => {
+    const msgHash = keccak256(msg);
+    const array = await secp.sign(msgHash, privateKey, {
+      recovered: true,
+      extraEntropy: true,
+    });
+    return [msgHash, array[0], array[1]];
+  };
+
+  sign(messageHash).then((array) => {
+    usedSignatures.push(toHex(array[1]));
+    res.send({
+      msgHash: toHex(array[0]),
+      signature: toHex(array[1]),
+      recoveryBit: array[2],
+    });
+  });
+});
+
 app.post("/send", (req, res) => {
+  // Check is signature is already used
   const { sender, recipient, amount } = req.body;
 
   setInitialBalance(sender);
