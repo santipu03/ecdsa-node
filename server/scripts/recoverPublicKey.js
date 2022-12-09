@@ -4,9 +4,9 @@ const { toHex, utf8ToBytes } = require("ethereum-cryptography/utils");
 
 // Paste here the values to recover the Public Key
 const msgHash =
-  "8e5ba2564bac5c7de3890bd885a03a1777c50476f325c11a7dbd4e817bb13c02";
+  "ed39ccdbf3d862bc10d67dbf77b0f5f22c3ec3e08ea4be7d379762b281d2c1c6";
 const signature =
-  "3044022008ab49e98052968d3d341252f83b3acc43e0279d1dea60635899d50d87c9961a022051d1d2f1a5e6576831a43d005a69204febdf2f74f449b6aaba766cd51791b464";
+  "3045022100f219150dad22ba0559df524da404114a7e2632dff755138aefd3e3548b8dc177022003e7ecbb12d80ab2da5964fa87c839934bed17d8222678e738feef96f285957a";
 const recoveryBit = 0;
 
 const recoverPublicKey = async (msgHash, signature, recoveryBit) => {

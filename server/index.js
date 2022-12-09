@@ -12,7 +12,7 @@ app.use(express.json());
 const balances = {
   "0xe34655d1af60239111125ba68377f6731f83f54d": 100,
   "0x83a54340b036b2679cef2b300b1178e33033f67e": 50,
-  "0x82850e255b1b6dc6ca2014da9731b5cdbf3b40b3": 75,
+  "0x3a6ed79d36d90ccb6160d8cfd610b1fc9f9b95a7": 75,
 };
 
 const usedSignatures = [];
@@ -23,44 +23,30 @@ app.get("/balance/:address", (req, res) => {
   res.send({ balance });
 });
 
-// app.post("/verify", (req, res) => {
-//   const { msgHash, signature, recoveryBit } = req.body;
-//   const recoverPublicKey = async (msgHash, signature, recoveryBit) => {
-//     const recoveredPublicKey = await secp.recoverPublicKey(
-//       msgHash,
-//       signature,
-//       recoveryBit
-//     );
-//     return recoveredPublicKey;
-//   };
-//
-//   recoverPublicKey(msgHash, signature, parseInt(recoveryBit)).then(
-//     (recoveredPublicKey) => {
-//       const hashedPublicKey = keccak256(recoveredPublicKey);
-//       const address = hashedPublicKey.slice(1).slice(-20);
-//       res.send({
-//         recoveredAddress: `0x${toHex(address)}`,
-//       });
-//     }
-//   );
-// });
-
 app.post("/send", (req, res) => {
-  // Check is signature is already used
   const { amount, recipient, msgHash, signature, recoveryBit } = req.body;
+  let recoveredPublicKey, senderAddress;
 
-  const recoveredPublicKey = recoverPublicKey(msgHash, signature, recoveryBit);
+  recoverPublicKey(msgHash, signature, recoveryBit).then((publicKey) => {
+    recoveredPublicKey = publicKey;
+    senderAddress = `0x${toHex(
+      keccak256(recoveredPublicKey).slice(1).slice(-20)
+    )}`;
 
-  setInitialBalance(sender);
-  setInitialBalance(recipient);
+    setInitialBalance(senderAddress);
+    setInitialBalance(recipient);
 
-  if (balances[sender] < amount) {
-    res.status(400).send({ message: "Not enough funds!" });
-  } else {
-    balances[sender] -= amount;
-    balances[recipient] += amount;
-    res.send({ balance: balances[sender] });
-  }
+    if (balances[senderAddress] < amount) {
+      res.status(400).send({ message: "Not enough funds!" });
+    } else if (usedSignatures.includes(signature)) {
+      res.status(400).send({ message: "Signature already used!" });
+    } else {
+      usedSignatures.push(signature);
+      balances[senderAddress] -= amount;
+      balances[recipient] += amount;
+      res.send({ balance: balances[senderAddress], senderAddress });
+    }
+  });
 });
 
 app.listen(port, () => {
@@ -77,7 +63,12 @@ async function recoverPublicKey(msgHash, signature, recoveryBit) {
   const recoveredPublicKey = await secp.recoverPublicKey(
     msgHash,
     signature,
-    recoveryBit
+    parseInt(recoveryBit)
   );
+
   return recoveredPublicKey;
 }
+
+// Private Key: c059043036d17488a7cd07197f474e972669e86ce5f66d1e2e8e42aafa1197b0
+// Public Key: 04258b958c6284e247ad8630b65b44540535a14490418b9540f183758978a18e087a972c74152fae4938942eadf3146fb57b320756ed4d93ed8588d309e8754461
+// Address: 0x3a6ed79d36d90ccb6160d8cfd610b1fc9f9b95a7
