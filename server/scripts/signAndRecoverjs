@@ -1,0 +1,42 @@
+const secp = require("ethereum-cryptography/secp256k1");
+const { keccak256 } = require("ethereum-cryptography/keccak");
+const { toHex, utf8ToBytes } = require("ethereum-cryptography/utils");
+
+const privateKey =
+  "1c7f9a779b571fa7453d6f399904fb1c6689529e5f840d2350655b8563d36f29";
+const publicKey = secp.getPublicKey(privateKey);
+const bytesArray = utf8ToBytes("Hello");
+const messageHash = keccak256(bytesArray);
+
+const sign = async (msg) => {
+  const msgHash = keccak256(msg);
+  const array = await secp.sign(msgHash, privateKey, { recovered: true });
+  return [msgHash, array[0], array[1]];
+};
+
+const recoverPublicKey = async (msgHash, signature, recoveryBit) => {
+  const recoveredPublicKey = await secp.recoverPublicKey(
+    msgHash,
+    signature,
+    recoveryBit
+  );
+  return recoveredPublicKey;
+};
+
+sign(messageHash).then((array) => {
+  const msgHash = toHex(array[0]);
+  const signature = toHex(array[1]);
+  const recoveryBit = array[2];
+  recoverPublicKey(msgHash, signature, recoveryBit).then(
+    (recoveredPublicKey) => {
+      console.log(`Recovered Public Key: ${toHex(recoveredPublicKey)}`);
+      console.log(
+        `Both public keys are the same? ${
+          toHex(recoveredPublicKey) === toHex(publicKey)
+        }`
+      );
+    }
+  );
+});
+
+console.log(`Original Public Key ${toHex(publicKey)}`);
