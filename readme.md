@@ -13,6 +13,7 @@ Then the user can can copy the message hash, the signature and the recovery bit 
 In the Wallet section the user can check the balances that the three example adresses do transfers with them
 
 ## Demo
+
 This is an image of what you get when you start the frontend and server.
 
 ![Screenshot from 2022-12-10 18-58-59](https://user-images.githubusercontent.com/90318659/206869266-97688d35-d085-4975-aa36-6297c233c3f5.png)
