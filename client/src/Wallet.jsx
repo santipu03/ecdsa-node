@@ -32,12 +32,33 @@ function Wallet({ address, setAddress, balance, setBalance }) {
         Check Balance
       </div>
       <div className="balance">Balance: {balance}</div>
-      <div className="balance">
-        Example Wallets:
+      <div className="exampleWalletsContainer">
         <ul>
-          <li>0xe34655d1af60239111125ba68377f6731f83f54d</li>
-          <li>0x83a54340b036b2679cef2b300b1178e33033f67e</li>
-          <li>0x82850e255b1b6dc6ca2014da9731b5cdbf3b40b3</li>
+          <li>
+            <b>Private Key:</b>
+            7de927f359047962a4ccbf1dce5a477339199f6b8a1d6eeb2262f66dd684cc62
+          </li>
+          <li>
+            <b>Address:</b> 0xbb1b09a9f2647a136255bdf733511d4dee68e37b
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <b>Private Key:</b>
+            22a19353f97b9521bc03a723e0f3c61db8df93214eae5afbd5dcd64cca88bce8
+          </li>
+          <li>
+            <b>Address:</b> 0x18c0c8c13ad7bc329a4276fa2a159da361af24da
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <b>Private Key:</b>
+            e6e32a4f580432b1b8c474f418d6e94ad06a7a5feb988ec922c4f3aa91cb982b
+          </li>
+          <li>
+            <b>Address:</b> 0x67d99d0a0aa726f8c7d0402b2940aeda93b51d7c
+          </li>
         </ul>
       </div>
     </div>
