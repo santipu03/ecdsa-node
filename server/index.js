@@ -10,9 +10,9 @@ app.use(cors());
 app.use(express.json());
 
 const balances = {
-  "0xe34655d1af60239111125ba68377f6731f83f54d": 100,
-  "0x83a54340b036b2679cef2b300b1178e33033f67e": 50,
-  "0x3a6ed79d36d90ccb6160d8cfd610b1fc9f9b95a7": 75,
+  "0xbb1b09a9f2647a136255bdf733511d4dee68e37b": 100,
+  "0x18c0c8c13ad7bc329a4276fa2a159da361af24da": 50,
+  "0x67d99d0a0aa726f8c7d0402b2940aeda93b51d7c": 75,
 };
 
 const usedSignatures = [];
@@ -68,7 +68,3 @@ async function recoverPublicKey(msgHash, signature, recoveryBit) {
 
   return recoveredPublicKey;
 }
-
-// Private Key: c059043036d17488a7cd07197f474e972669e86ce5f66d1e2e8e42aafa1197b0
-// Public Key: 04258b958c6284e247ad8630b65b44540535a14490418b9540f183758978a18e087a972c74152fae4938942eadf3146fb57b320756ed4d93ed8588d309e8754461
-// Address: 0x3a6ed79d36d90ccb6160d8cfd610b1fc9f9b95a7
