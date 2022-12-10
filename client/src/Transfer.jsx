@@ -35,7 +35,10 @@ function Transfer({ setBalance }) {
       )}...${recipient.substring(recipient.length - 4)}`;
 
       setOutput(
-        `${shortSenderAddress} sent ${shortRecipientAddress} an amount of ${sendAmount}`
+        <div>
+          <b>{shortSenderAddress}</b> sent <b>{shortRecipientAddress}</b> an
+          amount of <b>{sendAmount}</b>
+        </div>
       );
       setSendAmount("");
       setRecipient("");
@@ -96,9 +99,7 @@ function Transfer({ setBalance }) {
       </label>
 
       <input type="submit" className="button" value="Transfer" />
-      <div className="balance">
-        Output: <b>{output}</b>
-      </div>
+      <div className="balance">Output: &nbsp;&nbsp;{output}</div>
     </form>
   );
 }

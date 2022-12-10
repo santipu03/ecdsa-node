@@ -38,9 +38,15 @@ function Sign() {
         ></input>
       </label>
 
-      <div className="balance">Message Hash: {msgHash}</div>
-      <div className="balance">Signature: {signature}</div>
-      <div className="balance">Recovery Bit: {recoveryBit}</div>
+      <div className="balance">
+        <b>Message Hash: </b> {msgHash}
+      </div>
+      <div className="balance">
+        <b>Signature:</b> {signature}
+      </div>
+      <div className="balance">
+        <b>Recovery Bit:</b> {recoveryBit}
+      </div>
 
       <input type="submit" className="button" value="Sign" />
     </form>

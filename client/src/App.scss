@@ -1,3 +1,5 @@
+
+
 body {
   font-family: "Muli", sans-serif;
   font-weight: 300;
@@ -65,35 +67,53 @@ input {
 }
 
 .wallet {
-  max-width: 800px;
-  flex-grow: 2;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column; 
+}
+
+.exampleWalletsContainer {
+  font-weight: 400;
+  text-size-adjust: auto;
+  font-size: .9em;
   display: flex;
   flex-direction: column;
+  margin-top: 10px;
+  padding: 0.75rem;
+  background-color: #f4f6f8;
+  letter-spacing: 1px;
 
-  
+  ul {
+    background-color: #e2e8f0;
+    display: inline-block;
+    padding: 2%;
+    list-style-type: none;
+  }
 }
 
 .balance {
   // text-transform: uppercase;
-  // letter-spacing: 1px;
+  letter-spacing: 1px;
   font-weight: 400;
   height: fit-content;
   text-size-adjust: auto;
+  display: inline;
+  overflow-wrap: break-word;
 
   font-size: .9em;
-  display: inline-flex;
   margin-top: 10px;
   padding: 0.75rem;
   background-color: #f4f6f8;
 }
 
 .transfer {
+  
   display: flex;
   flex-direction: column;
 }
 
 .sign {
-  min-width: 1000px;
+  width: 80%;
   display: flex;
   flex-direction: column;
 }
